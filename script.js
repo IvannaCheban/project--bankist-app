@@ -77,25 +77,25 @@ const displayMovements = function (movements) {
 };
 
 //adding balance display using reduce method
-const calcDisplayBalance = function (movements) {
-  const balance = movements.reduce((acc, mov) => (acc += mov), 0);
-  labelBalance.textContent = `${balance} €`;
+const calcDisplayBalance = function (acc) {
+  acc.balance = acc.movements.reduce((acc, mov) => (acc += mov), 0);
+  labelBalance.textContent = `${acc.balance} €`;
 };
 
 //summary display at the bottom of the screen
-const calcDisplaySummary = function (movements) {
-  const incomes = movements
+const calcDisplaySummary = function (acc) {
+  const incomes = acc.movements
     .filter((mov) => mov > 0)
     .reduce((acc, cur) => acc + cur, 0);
   labelSumIn.textContent = `${incomes}€`;
-  const out = movements
+  const out = acc.movements
     .filter((mov) => mov < 0)
     .reduce((acc, cur) => acc + cur, 0);
   labelSumOut.textContent = `${Math.abs(out)}€`;
   //adding imaginary interest that bank pays you))
-  const interest = movements
+  const interest = acc.movements
     .filter((mov) => mov > 0)
-    .map((deposit) => (deposit * 1.2) / 100)
+    .map((deposit) => (deposit * acc.interestRate) / 100)
     .filter((int) => int >= 1)
     .reduce((total, curr) => total + curr, 0);
   // .reduce((int, cur, i, arr) => (cur >= 1 ? int + cur : int), 0)
@@ -115,6 +115,14 @@ const createUserNames = function (accs) {
 createUserNames(accounts);
 //Event handlers
 
+const updateUI = function (acc) {
+  //display  movements
+  displayMovements(acc.movements);
+  //display balance
+  calcDisplayBalance(acc);
+  //display summary
+  calcDisplaySummary(acc);
+};
 let currentAccount;
 //storing value on the global scope, as it will also gets usefull when implementing other funtionality like transfer
 btnLogin.addEventListener("click", function (e) {
@@ -137,12 +145,28 @@ btnLogin.addEventListener("click", function (e) {
     //losing focus of the field(getting rid of the coursore |)
     inputLoginPin.blur();
     inputLoginUsername.blur();
+    //updating ui
+    updateUI(currentAccount);
+  }
+});
+btnTransfer.addEventListener("click", function (e) {
+  e.preventDefault();
+  const amount = Number(inputTransferAmount.value);
+  const recieverAccout = accounts.find(
+    (acc) => acc.username === inputTransferTo.value
+  );
+  inputTransferAmount.value = inputTransferTo.value = "";
+  if (
+    amount > 0 &&
+    recieverAccout &&
+    currentAccount.balance >= amount &&
+    recieverAccout?.username !== currentAccount.username
+  ) {
+    //doing the transfer
+    currentAccount.movements.push(-amount);
+    recieverAccout.movements.push(amount);
 
-    //display  movements
-    displayMovements(currentAccount.movements);
-    //display balance
-    calcDisplayBalance(currentAccount.movements);
-    //display summary
-    calcDisplaySummary(currentAccount.movements);
+    //updating UI
+    updateUI(currentAccount);
   }
 });
