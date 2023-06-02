@@ -75,14 +75,12 @@ const displayMovements = function (movements) {
     containerMovements.insertAdjacentHTML("afterbegin", html); //attaching constructior with movements to container from the lates to the earliest //check MDN to know about how to use insertAdjacentHTML method
   });
 };
-displayMovements(account1.movements);
+
 //adding balance display using reduce method
 const calcDisplayBalance = function (movements) {
   const balance = movements.reduce((acc, mov) => (acc += mov), 0);
   labelBalance.textContent = `${balance} €`;
 };
-
-calcDisplayBalance(account1.movements);
 
 //summary display at the bottom of the screen
 const calcDisplaySummary = function (movements) {
@@ -103,8 +101,6 @@ const calcDisplaySummary = function (movements) {
   // .reduce((int, cur, i, arr) => (cur >= 1 ? int + cur : int), 0)
   labelSumInterest.textContent = `${interest}€`;
 };
-
-calcDisplaySummary(account1.movements);
 
 //creating username without creating side effects
 const createUserNames = function (accs) {
@@ -134,8 +130,19 @@ btnLogin.addEventListener("click", function (e) {
       .split(" ")
       .at(0)}`;
     containerApp.style.opacity = 100;
+
+    //clear the input fields
+    inputLoginUsername.value = inputLoginPin.value = "";
+
+    //losing focus of the field(getting rid of the coursore |)
+    inputLoginPin.blur();
+    inputLoginUsername.blur();
+
     //display  movements
+    displayMovements(currentAccount.movements);
     //display balance
+    calcDisplayBalance(currentAccount.movements);
     //display summary
+    calcDisplaySummary(currentAccount.movements);
   }
 });
