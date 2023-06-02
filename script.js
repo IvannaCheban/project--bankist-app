@@ -98,10 +98,7 @@ const calcDisplaySummary = function (movements) {
   const interest = movements
     .filter((mov) => mov > 0)
     .map((deposit) => (deposit * 1.2) / 100)
-    .filter((int, i, arr) => {
-      console.log(arr);
-      return int >= 1;
-    })
+    .filter((int) => int >= 1)
     .reduce((total, curr) => total + curr, 0);
   // .reduce((int, cur, i, arr) => (cur >= 1 ? int + cur : int), 0)
   labelSumInterest.textContent = `${interest}€`;
@@ -120,3 +117,25 @@ const createUserNames = function (accs) {
   });
 };
 createUserNames(accounts);
+//Event handlers
+
+let currentAccount;
+//storing value on the global scope, as it will also gets usefull when implementing other funtionality like transfer
+btnLogin.addEventListener("click", function (e) {
+  // prevent <form> from submitting
+  e.preventDefault();
+  currentAccount = accounts.find(
+    (acc) => acc.username === inputLoginUsername.value
+  );
+  console.log(currentAccount);
+  if (currentAccount?.pin === Number(inputLoginPin.value)) {
+    //display UI and the message
+    labelWelcome.textContent = `Welcome back, ${currentAccount.owner
+      .split(" ")
+      .at(0)}`;
+    containerApp.style.opacity = 100;
+    //display  movements
+    //display balance
+    //display summary
+  }
+});
