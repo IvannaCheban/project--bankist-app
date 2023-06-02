@@ -94,6 +94,17 @@ const calcDisplaySummary = function (movements) {
     .filter((mov) => mov < 0)
     .reduce((acc, cur) => acc + cur, 0);
   labelSumOut.textContent = `${Math.abs(out)}€`;
+  //adding imaginary interest that bank pays you))
+  const interest = movements
+    .filter((mov) => mov > 0)
+    .map((deposit) => (deposit * 1.2) / 100)
+    .filter((int, i, arr) => {
+      console.log(arr);
+      return int >= 1;
+    })
+    .reduce((total, curr) => total + curr, 0);
+  // .reduce((int, cur, i, arr) => (cur >= 1 ? int + cur : int), 0)
+  labelSumInterest.textContent = `${interest}€`;
 };
 
 calcDisplaySummary(account1.movements);
