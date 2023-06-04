@@ -171,6 +171,25 @@ btnTransfer.addEventListener("click", function (e) {
     updateUI(currentAccount);
   }
 });
+
+btnLoan.addEventListener("click", function (e) {
+  e.preventDefault();
+  const amount = Number(inputLoanAmount.value);
+  if (
+    amount > 0 &&
+    currentAccount.movements.some((mov) => mov >= amount * 0.1)
+  ) {
+    //add current value to the movement data
+    currentAccount.movements.push(amount);
+
+    //update the UI
+    updateUI(currentAccount);
+  }
+  //clearing the field and loosing focus
+  inputLoanAmount.value = "";
+  inputLoanAmount.blur();
+});
+
 btnClose.addEventListener("click", function (e) {
   e.preventDefault();
 
@@ -183,7 +202,7 @@ btnClose.addEventListener("click", function (e) {
     );
     console.log(index);
     //Delete account
-    accounts.splice(index, 1);
+    accounts.splice(index, 1); //element and amount of elements to be deleted after that element
 
     // Hide UI
     containerApp.style.opacity = 0;
