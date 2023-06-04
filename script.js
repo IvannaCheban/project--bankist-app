@@ -60,11 +60,13 @@ const inputLoanAmount = document.querySelector(".form__input--loan-amount");
 const inputCloseUsername = document.querySelector(".form__input--user");
 const inputClosePin = document.querySelector(".form__input--pin");
 
-const displayMovements = function (movements) {
+const displayMovements = function (movements, sort = false) {
   containerMovements.innerHTML = ""; //clearing the element before inserting new incoming values
 
+  const movs = sort ? movements.slice().sort((a, b) => a - b) : movements; // creating copy of movements in order not to mutate the underlying array, using the terrenary operator to switch between modes //(sort by default is false)
+
   //creating a function to display array elements
-  movements.forEach(function (mov, i) {
+  movs.forEach(function (mov, i) {
     const type = mov > 0 ? "deposit" : "withdrawal"; //adding type to switch between elements
     const html = `
 <div class="movements__row">
@@ -208,4 +210,12 @@ btnClose.addEventListener("click", function (e) {
     containerApp.style.opacity = 0;
   }
   inputClosePin.value = inputCloseUsername = ""; //clearing fields
+});
+
+let sorted = false; //preserving the value state throuout the clicks
+
+btnSort.addEventListener("click", function (e) {
+  e.preventDefault();
+  displayMovements(currentAccount.movements, !sorted);
+  sorted = !sorted; //toggling the variable
 });
