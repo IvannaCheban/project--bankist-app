@@ -140,6 +140,12 @@ const updateUI = function (acc) {
   calcDisplaySummary(acc);
 };
 let currentAccount;
+
+//FAKE ALWAYS LOGGED IN
+currentAccount = account1;
+updateUI(currentAccount);
+containerApp.style.opacity = 100;
+
 //storing value on the global scope, as it will also gets usefull when implementing other funtionality like transfer
 btnLogin.addEventListener("click", function (e) {
   // prevent <form> from submitting
@@ -234,3 +240,14 @@ btnSort.addEventListener("click", function (e) {
   displayMovements(currentAccount.movements, !sorted);
   sorted = !sorted; //toggling the variable
 });
+
+const now = new Date();
+const day = `${now.getDate().padStart(2, 0)}`;
+const month = `${now.getMonth() + 1}`.padStart(2, 0);
+const year = now.getFullYear();
+const hour = now.getHours();
+const minute = now.getMinutes();
+
+labelDate.textContent = `${day}/${month}/${year}, ${hour}:${minute}`;
+
+// day/month/year
