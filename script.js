@@ -156,15 +156,6 @@ currentAccount = account1;
 updateUI(currentAccount);
 containerApp.style.opacity = 100;
 
-const now = new Date();
-const day = `${now.getDate()}`.padStart(2, 0);
-const month = `${now.getMonth() + 1}`.padStart(2, 0);
-const year = now.getFullYear();
-const hour = now.getHours();
-const minute = now.getMinutes();
-
-labelDate.textContent = `${day}/${month}/${year}, ${hour}:${minute}`;
-
 // day/month/year
 
 //storing value on the global scope, as it will also gets usefull when implementing other funtionality like transfer
@@ -182,6 +173,15 @@ btnLogin.addEventListener("click", function (e) {
       .split(" ")
       .at(0)}`;
     containerApp.style.opacity = 100;
+
+    //create current date and time
+    const now = new Date();
+    const day = `${now.getDate()}`.padStart(2, 0);
+    const month = `${now.getMonth() + 1}`.padStart(2, 0);
+    const year = now.getFullYear();
+    const hour = now.getHours();
+    const minute = now.getMinutes();
+    labelDate.textContent = `${day}/${month}/${year}, ${hour}:${minute}`;
 
     //clear the input fields
     inputLoginUsername.value = inputLoginPin.value = "";
@@ -211,6 +211,9 @@ btnTransfer.addEventListener("click", function (e) {
     currentAccount.movements.push(-amount);
     recieverAccout.movements.push(amount);
 
+    //add transfer date
+    currentAccount.movementsDates.push(new Date());
+    recieverAccout.movementsDates.push(new Date());
     //updating UI
     updateUI(currentAccount);
   }
@@ -225,6 +228,9 @@ btnLoan.addEventListener("click", function (e) {
   ) {
     //add current value to the movement data
     currentAccount.movements.push(amount);
+
+    //add loan date
+    currentAccount.movementsDates.push(new Date());
 
     //update the UI
     updateUI(currentAccount);
