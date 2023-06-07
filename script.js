@@ -179,8 +179,8 @@ btnLogin.addEventListener("click", function (e) {
     const day = `${now.getDate()}`.padStart(2, 0);
     const month = `${now.getMonth() + 1}`.padStart(2, 0);
     const year = now.getFullYear();
-    const hour = now.getHours();
-    const minute = now.getMinutes();
+    const hour = `${now.getHours()}`.padStart(2, 0);
+    const minute = `${now.getMinutes()}`.padStart(2, 0);
     labelDate.textContent = `${day}/${month}/${year}, ${hour}:${minute}`;
 
     //clear the input fields
@@ -212,8 +212,8 @@ btnTransfer.addEventListener("click", function (e) {
     recieverAccout.movements.push(amount);
 
     //add transfer date
-    currentAccount.movementsDates.push(new Date());
-    recieverAccout.movementsDates.push(new Date());
+    currentAccount.movementsDates.push(new Date().toISOString());
+    recieverAccout.movementsDates.push(new Date().toISOString());
     //updating UI
     updateUI(currentAccount);
   }
@@ -230,7 +230,7 @@ btnLoan.addEventListener("click", function (e) {
     currentAccount.movements.push(amount);
 
     //add loan date
-    currentAccount.movementsDates.push(new Date());
+    currentAccount.movementsDates.push(new Date().toISOString());
 
     //update the UI
     updateUI(currentAccount);
