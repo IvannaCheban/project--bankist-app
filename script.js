@@ -22,7 +22,7 @@ const account1 = {
     "2023-06-06T10:51:36.790Z",
   ],
   currency: "EUR",
-  locale: "uk-UA", // de-DE
+  locale: "pt-PT", // de-DE
 };
 
 const account2 = {
@@ -89,6 +89,12 @@ const formatMovementDate = function (date, locale) {
   // return `${day}/${month}/${year}`;
   return new Intl.DateTimeFormat(locale).format(date);
 };
+const formatCur = function (value, locale, currency) {
+  return new Intl.NumberFormat(locale, {
+    style: "currency",
+    currency: currency,
+  }).format(value);
+};
 
 const displayMovements = function (acc, sort = false) {
   containerMovements.innerHTML = ""; //clearing the element before inserting new incoming values
@@ -100,13 +106,18 @@ const displayMovements = function (acc, sort = false) {
   //creating a function to display array elements
   movs.forEach(function (mov, i) {
     const type = mov > 0 ? "deposit" : "withdrawal"; //adding type to switch between elements
+
     const date = new Date(acc.movementsDates[i]);
+
     const displayDate = formatMovementDate(date, acc.locale);
+
+    const formatedMovement = formatCur(mov, acc.locale, acc.currency);
+
     const html = `
 <div class="movements__row">
 <div class="movements__type movements__type--${type}">${i + 1} ${type}</div>
 <div class="movements__date">${displayDate}</div>
-<div class="movements__value">${mov.toFixed(2)}€</div>
+<div class="movements__value">${formatedMovement}</div>
 </div>`; //creating a constructor to display values
 
     containerMovements.insertAdjacentHTML("afterbegin", html); //attaching constructior with movements to container from the lates to the earliest //check MDN to know about how to use insertAdjacentHTML method
@@ -116,7 +127,7 @@ const displayMovements = function (acc, sort = false) {
 //adding balance display using reduce method
 const calcDisplayBalance = function (acc) {
   acc.balance = acc.movements.reduce((acc, mov) => (acc += mov), 0);
-  labelBalance.textContent = `${acc.balance.toFixed(2)} €`;
+  labelBalance.textContent = formatCur(acc.balance, acc.locale, acc.currency);
 };
 
 //summary display at the bottom of the screen
@@ -124,11 +135,11 @@ const calcDisplaySummary = function (acc) {
   const incomes = acc.movements
     .filter((mov) => mov > 0)
     .reduce((acc, cur) => acc + cur, 0);
-  labelSumIn.textContent = `${incomes.toFixed(2)}€`;
+  labelSumIn.textContent = formatCur(incomes, acc.locale, acc.currency);
   const out = acc.movements
     .filter((mov) => mov < 0)
     .reduce((acc, cur) => acc + cur, 0);
-  labelSumOut.textContent = `${Math.abs(out).toFixed(2)}€`;
+  labelSumOut.textContent = formatCur(Math.abs(out), acc.locale, acc.currency);
   //adding imaginary interest that bank pays you))
   const interest = acc.movements
     .filter((mov) => mov > 0)
@@ -136,7 +147,7 @@ const calcDisplaySummary = function (acc) {
     .filter((int) => int >= 1)
     .reduce((total, curr) => total + curr, 0);
   // .reduce((int, cur, i, arr) => (cur >= 1 ? int + cur : int), 0)
-  labelSumInterest.textContent = `${interest.toFixed(2)}€`;
+  labelSumInterest.textContent = formatCur(interest, acc.locale, acc.currency);
 };
 
 //creating username without creating side effects
