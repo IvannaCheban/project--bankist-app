@@ -279,6 +279,10 @@ btnTransfer.addEventListener("click", function (e) {
     recieverAccout.movementsDates.push(new Date().toISOString());
     //updating UI
     updateUI(currentAccount);
+
+    //Reset timer
+    clearInterval(timer);
+    timer = startLogOutTimer();
   }
 });
 
@@ -298,6 +302,10 @@ btnLoan.addEventListener("click", function (e) {
 
       //update the UI
       updateUI(currentAccount);
+
+      //Reset timer
+      clearInterval(timer);
+      timer = startLogOutTimer();
     }, 2500); //miliseconds
   }
   //clearing the field and loosing focus
